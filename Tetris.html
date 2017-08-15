@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{box-sizing:border-box;}
+		#box{width: 500px;height: 650px;margin: 0 auto;background: black;}
+		#box div{width: 50px;height: 50px;float: left;}
+		#box .game{background: yellow;border: 1px solid #ccc;}
+		.arrived{background: yellow;border: 1px solid #ccc;}
+	</style>
+	<script>
+		window.onload = function(){
+			var divs = document.getElementById('box').children;
+			//图形数组
+			// ,[4,13,14,15],[4,14,24,34]
+			var gameArr = [[4,14,15,24],[4,13,14,15],[4,14,24,34]]
+			var newgame = new Array();
+			var gameNum;
+			function Tetris(){
+				gameNum = parseInt(Math.random()*gameArr.length);
+				//初始值，随机选择图形，添加类名
+				for(var i = 0;i<gameArr[gameNum].length;i++){
+					divs[gameArr[gameNum][i]].className = 'game';
+					newgame[i] = gameArr[gameNum][i];
+				}
+				timer1 = setInterval(function(){
+					// return
+					//清除样式
+					for(var j = 0;j<divs.length;j++){
+						divs[j].className = '';
+						for(var k = 0;k<divs.length;k++){
+							if(divs[k].getAttribute('data-num') != null){
+								divs[k].className = 'arrived';
+							}
+						}
+					}
+					//往下走
+					//添加类名
+					for(var j = 0;j<newgame.length;j++){
+						newgame[j] += 10;
+						divs[newgame[j]].className = 'game';
+					}
+					// clearInterval(timer1);
+					//到底部时定时器停止，加设属性
+					if(newgame[newgame.length-1]>=120){
+						for(var j = 0;j<newgame.length;j++){
+							divs[newgame[j]].setAttribute('data-num',newgame[j]);
+						}
+						flag = 0;
+						clearInterval(timer1);
+						Tetris();
+					}
+					//碰到底部方块时定时器停止，加设属性
+					var arriveds = document.getElementsByClassName('arrived');
+					// console.log(arriveds);
+					for(var j = 0;j<newgame.length;j++){
+						for(var k = 0;k<arriveds.length;k++){
+
+							if(newgame[j] == arriveds[k].getAttribute('data-num')-10){
+								for(var j = 0;j<newgame.length;j++){
+									divs[newgame[j]].setAttribute('data-num',newgame[j]);
+								}
+								flag = 0;
+								clearInterval(timer1);
+								Tetris();
+							}
+						}
+					}
+					//判断整行消除
+					var arriveds = document.getElementsByClassName('arrived');
+					var numSmall;
+					var numBig;
+					var arrivedNum = 0;
+					for(var l = 0;l<arriveds.length;l++){
+						if(arriveds[l].getAttribute('data-num')%10 == 0){
+							numSmall = arriveds[l].getAttribute('data-num');
+						}
+						if(arriveds[l].getAttribute('data-num')-numSmall == 9){
+							numBig = arriveds[l].getAttribute('data-num');
+							for(var x = numSmall;x<=numBig;x++){
+								if(divs[x].className == 'arrived'){
+									console.log(arrivedNum);
+									arrivedNum++;
+									if(arrivedNum == 10){
+										for(var y = numSmall;y<=numBig;y++){
+											divs[y].className = '';
+											divs[y].removeAttribute('data-num');
+										}
+										arrivedNum = 0;
+									}
+								}
+								
+							}
+						}
+					}
+
+				},500)
+			}
+			//设置左右移动事件函数
+			var flag = 0;
+			console.log(flag);
+
+			document.onkeydown = function(e){
+				e = e || window.event;
+				if(e.keyCode == 40){
+					Tetris();
+				}
+				if(e.keyCode == 37){
+					for(var i = 0;i<newgame.length;i++){
+						newgame[i] -= 1;
+					}
+				}
+				if(e.keyCode == 39){
+					for(var i = 0;i<newgame.length;i++){
+						newgame[i] += 1;
+					}
+				}
+				if(e.keyCode == 38){
+					//一、二号图旋转
+					if(gameNum == 0){
+						//旋转规律数组
+						if(flag == 0){
+							newgame[0] += 11;
+							newgame[2] += 9;
+							newgame[3] -= 11;
+							flag++;
+						}else if(flag == 1){
+							newgame[0] += 9;
+							newgame[2] -= 11;
+							newgame[3] -= 9;
+							flag++;
+						}else if(flag == 2){
+							newgame[0] -= 11;
+							newgame[2] -= 9;
+							newgame[3] += 11;
+							flag++;
+						}else if(flag == 3){
+							newgame[0] -= 9;
+							newgame[2] += 11;
+							newgame[3] += 9;
+							flag = 0;
+						}
+					}
+				}
+
+			}
+			
+		}
+	</script>
+</head>
+<body>
+	<div id="box">
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+</body>
+</html>
